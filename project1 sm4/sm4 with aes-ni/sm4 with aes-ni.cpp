@@ -57,7 +57,7 @@ static uint8_t SBox[256] = {
     0xD7, 0xCB, 0x39, 0x48 };
 
 // 32位循环左移宏
-#define rotl32(value, shift) ((value << shift) | value >> (32 - shift))
+#define rotl0(value, shift) ((value << shift) | value >> (32 - shift))
 
 // ============================= SM4 密钥初始化 =============================
 void SM4_KeyInit(uint8_t* key, SM4_Key* sm4_key) {
@@ -82,7 +82,7 @@ void SM4_KeyInit(uint8_t* key, SM4_Key* sm4_key) {
         }
 
         // 线性变换
-        sm4_key->rk[i] = k[0] ^ tmp ^ rotl32(tmp, 13) ^ rotl32(tmp, 23);
+        sm4_key->rk[i] = k[0] ^ tmp ^ rotl0(tmp, 13) ^ rotl0(tmp, 23);
 
         // 密钥移位
         k[0] = k[1];
