@@ -55,3 +55,34 @@ Table3[byte] = T(byte << 0)
 <img src=".\截图\sm4 with t and simd.png">  
 
 ## 利用AES-NI指令集加速
+
+通过AES-NI 指令集实现了对 SM4 算法的硬件加速，其核心思想是：将 SM4 的 S-box 和线性变换（T函数）映射到 AES-NI 的 AESENC/AESENCLAST 指令上，从而利用 CPU 的 AES 硬件加速单元来执行原本属于 SM4 的运算。
+
+虽然 SM4 和 AES 是不同的算法，但它们的结构相似：
+
+都有轮函数
+
+都有非线性字节替换（S-box）
+
+都有线性变换（移位、异或）
+
+因此，可以通过数学构造将 SM4 的 S-box 和线性变换映射为 AES 的 S-box 和 MixColumns 运算，从而复用 AES-NI 指令。
+
+| 步骤 | 操作                     | 对应指令                     | 目的           |
+| -- | ---------------------- | ------------------------ | ------------ |
+| 1  | `AddTC`                | `_mm_xor_si128`          | 预处理：加常数      |
+| 2  | `MulMatrixTA`          | `_mm_shuffle_epi8 + xor` | 线性变换（前）      |
+| 3  | `_mm_aesenclast_si128` | AES-NI                   | 执行 AES S-box |
+| 4  | `MulMatrixATA`         | `_mm_shuffle_epi8 + xor` | 线性变换（后）      |
+| 5  | `AddATAC`              | `_mm_xor_si128`          | 后处理：加常数      |
+### 与原有方法理论性能对比：
+| 项目    | 传统实现  | AES-NI 优化实现              |
+| ----- | ----- | ------------------------ |
+| S-box | 软件查表  | 使用 AES-NI 的 `aesenclast` |
+| 线性变换  | 移位+异或 | 通过 shuffle 和 xor 构造      |
+| 并行度   | 1×    | 4×（128bit）               |
+| 性能提升  | 1×    | **5~10×**（实测）            |
+| 依赖    | 纯软件   | Intel AES-NI 指令集         |
+
+### 实验结果
+<img src=".\截图\sm4 with aes-ni.png">  
