@@ -210,7 +210,7 @@ for idx, (attack_name, attack_func) in enumerate(attacks):
 - **背景图像**：尺寸为 6048 x 2574 的彩色图像
 <img src=".\sduqingdao_background.bmp">
 
-- **水印图像**：尺寸为 483 x 118 的校徽图像（logo为白色，若背景为白色，会看不见，可以调为深色模式查看）
+- **水印图像**：尺寸为 483 x 118 的校徽图像（logo为白色，若背景为白色会看不见，可以调为深色模式查看）
 <img src=".\sduqingdao_logo.bmp">
 
 ### 附录B：实验图像
