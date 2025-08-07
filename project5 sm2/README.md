@@ -146,8 +146,8 @@
 1. **选择随机数 u 和 v**：生成两个与曲线阶数 `n` 互质的随机数 `u` 和 `v`。这两个随机数将用于构造伪造签名。
 2. **计算点 R**：通过椭圆曲线点加运算，计算点 $R = u \cdot G + v \cdot P$，其中 \( G \) 是基点，\( P \) 是公钥。
 3. **构造伪造签名参数**：
-   - 计算 $e_1 = (R \cdot u \cdot \text{mul\_inv}(v, n)) \mod n$
-   - 计算 $s_1 = (R \cdot \text{mul\_inv}(v, n)) \mod n$
+   - 计算 $e_{1} = (R \cdot u \cdot \text{mul\_inv}(v, n)) \mod n$
+   - 计算 $s_{1} = (R \cdot \text{mul\_inv}(v, n)) \mod n$
 4. **验证伪造签名**：使用未验证消息的验证算法 `ver_no_m` 验证构造的签名  (e_1, s_1, R)  是否有效。
 
 #### 运行结果
